@@ -1,0 +1,407 @@
+
+jQuery(document).ready(function(){
+		var getwidth = getCookie("historywidth");
+		var getheight = getCookie("historyheight");
+		if(getwidth != null && getheight != null){
+			var width = getwidth;
+			var height = getheight;
+		}else{
+			var width = document.documentElement.clientWidth-300;
+			var height = document.documentElement.clientHeight-200;
+		}
+
+		var cwidth = document.documentElement.clientWidth-100;
+		var cheight = document.documentElement.clientHeight-20;
+		//var height = document.body.clientHeight-200;
+		var moveX = 0;
+		var moveY = 0;
+		var moveTop = 0;
+		var moveLeft = 0;
+		var moveable = false;
+		var docMouseMoveEvent = document.onmousemove;
+		var docMouseUpEvent = document.onmouseup;
+
+		jQuery("body").append('<div id="smchuncai" onfocus="this.blur();"><div id="chuncaiface"></div><div id="dialog_chat"><div id="chat_top"></div><div id="dialog_chat_contents"><div id="dialog_chat_loading"></div><div id="tempsaying"></div><div id="showchuncaimenu"><ul class="wcc_mlist" id="shownotice">显示公告</ul><ul class="wcc_mlist" id="chatTochuncai">聊&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;天</ul><ul class="wcc_mlist" id="foods">吃 零 食</ul><ul class="wcc_mlist" id="blogmanage">博客后台</ul><ul class="wcc_mlist" id="lifetimechuncai">生存时间</ul><ul class="wcc_mlist" id="closechuncai">关闭春菜</ul></div><div><ul id="chuncaisaying"></ul></div><div id="getmenu"> </div></div><div id="chat_bottom"></div></div></div>');
+		jQuery("#smchuncai").append('<div id="addinput"><div id="inp_l"><input id="talk" type="text" name="mastersay" value="" /> <input id="talkto" type="button" value=" " /></div><div id="inp_r"> X </div></div>');
+		jQuery("body").append('<div id="callchuncai">召唤春菜</div>');
+		//判断春菜是否处于隐藏状态
+		var is_closechuncai = getCookie("is_closechuncai");
+		if(is_closechuncai == 'close'){
+			closechuncai_init();
+		}
+
+		jQuery("#smchuncai").css('left', width+'px');
+		jQuery("#smchuncai").css('top', height+'px');
+		jQuery("#callchuncai").attr("style", "top:"+cheight+"px; left:"+cwidth+"px;");
+
+		smcc = document.getElementById("smchuncai");
+		smcc.onmousedown = function(){
+			var ent = getEvent();
+			moveable = true;
+			moveX = ent.clientX;
+			moveY = ent.clientY;
+			var obj = document.getElementById("smchuncai");
+			moveTop = parseInt(obj.style.top);
+			moveLeft = parseInt(obj.style.left);
+			if(isFirefox=navigator.userAgent.indexOf("Firefox")>0){
+				window.getSelection().removeAllRanges();
+			}			
+			document.onmousemove = function(){
+				if(moveable){
+					var ent = getEvent();
+					var x = moveLeft + ent.clientX - moveX;
+					var y = moveTop + ent.clientY - moveY;
+					var w = 200;
+					var h = 200;	//w,h为浮层宽高
+					obj.style.left = x + "px";
+					obj.style.top = y + "px";
+				}
+			};
+			document.onmouseup = function(){
+				if(moveable){
+					var historywidth = obj.style.left;
+					var historyheight = obj.style.top;
+					historywidth = historywidth.replace('px', '');
+					historyheight = historyheight.replace('px', '');
+					setCookie("historywidth", historywidth, 60*60*24*30*1000);
+					setCookie("historyheight", historyheight, 60*60*24*30*1000);
+					document.onmousemove = docMouseMoveEvent;
+					document.onmouseup = docMouseUpEvent;
+					moveable = false; 
+					moveX = 0;
+					moveY = 0;
+					moveTop = 0;
+					moveLeft = 0;
+				}
+			}
+		};
+		jQuery("#getmenu").click(function(){
+				chuncaiMenu();
+				setFace(1);
+				});
+		jQuery("#closechuncai").click(function(){
+				setFace(3);
+				closechuncai();
+				});
+		jQuery("#callchuncai").click(function(){
+				setFace(2);
+				callchuncai();
+				setCookie("is_closechuncai", '', 60*60*24*30*1000);
+				});
+		jQuery("#shownotice").click(function(){
+				setFace(1);
+				closeChuncaiMenu();
+				});
+		jQuery("#lifetimechuncai").click(function(){
+				closeChuncaiMenu();
+				closeNotice();
+				setFace(2);
+				getdata('showlifetime');
+				});
+		jQuery("#chatTochuncai").click(function(){
+				showInput();
+				});
+		jQuery("#inp_r").click(function(){
+				closeInput();
+				chuncaiSay('不聊天了吗？(→_→)');
+				setFace(3);
+				});
+		jQuery("#talkto").click(function(){
+				getdata("talking");
+				});
+		jQuery("#blogmanage").click(function(){
+				closeChuncaiMenu();
+				closeNotice();
+				jQuery("#getmenu").css("display", "none");
+				chuncaiSay("马上就跳转到后台管理页面去了哦～～～");
+				setFace(2);
+				setTimeout(function(){
+					window.location.href = path+'/wp-admin/';
+					}, 2000);
+				});
+		jQuery("#foods").click(function(){
+				closeChuncaiMenu();
+				closeNotice();
+				getdata("foods");
+				});
+/*		jQuery("#showchuncaimenu").hover(function(){
+				},function(){
+				jQuery("#showchuncaimenu").slideUp('slow').show();
+				});*/
+		document.onmousemove = function(){
+			stoptime();
+			tol = 0;
+			setTime();
+			//chuncaiSay("啊，野生的主人出现了！ ～～～O口O");
+		}
+		talkSelf(talktime);
+		document.getElementById("smchuncai").onmouseover = function(){
+			if(talkobj){
+				clearTimeout(talkobj);
+			}
+			talktime = 0;
+			talkSelf(talktime);
+		}
+		});
+
+function getEvent() {
+	return window.event || arguments.callee.caller.arguments[0];
+}
+
+var eattimes = 0;
+function eatfood(obj){
+	var gettimes = getCookie("eattimes");
+	if(parseInt(gettimes) > parseInt(9)){
+		chuncaiSay("主人是个大混蛋！！");
+		setFace(3);
+		closechuncai_evil();
+	}else if(parseInt(gettimes) > parseInt(7)){
+		chuncaiSay(".....................肚子要炸了，死也不要再吃了～～！！！TAT");
+		setFace(3);
+	}else if(parseInt(gettimes) == parseInt(5)){
+		chuncaiSay("我已经吃饱了，不要再吃啦......");
+		setFace(3);
+	}else if(parseInt(gettimes) == parseInt(3)){
+		chuncaiSay("多谢款待，我吃饱啦～～～ ╰（￣▽￣）╭");
+		setFace(2);
+	}else{
+		var id = obj.replace("f",'');
+		getdata('eatsay', id);
+	}
+	eattimes++;
+	setCookie("eattimes", eattimes, 60*10*1000);
+}
+function chuncaiMenu(){
+	//jQuery("#showchuncaimenu").slideDown('fast').show();
+	clearChuncaiSay();
+	closeInput();
+	chuncaiSay("准备做什么呢？");
+	jQuery("#showchuncaimenu").css("display", "block");
+	jQuery("#getmenu").css("display", "none");
+	jQuery("#chuncaisaying").css("display", "none");
+}
+function closeChuncaiMenu(){
+	clearChuncaiSay();
+	jQuery("#showchuncaimenu").css("display", "none");
+	//jQuery("#chuncaisaying").css("display", "block");
+	showNotice();
+	jQuery("#getmenu").css("display", "block");
+}
+function showNotice(){
+	jQuery("#chuncaisaying").css("display", "block");
+}
+function closechuncai(){
+	stopTalkSelf();
+	chuncaiSay("记得再叫我出来哦...");
+	jQuery("#showchuncaimenu").css("display", "none");
+	setTimeout(function(){
+			jQuery("#smchuncai").fadeOut(1200);
+			jQuery("#callchuncai").css("display", "block");}, 2000);
+	//保存关闭状态的春菜
+	setCookie("is_closechuncai", 'close', 60*60*24*30*1000);
+}
+function closechuncai_evil(){
+	stopTalkSelf();
+	jQuery("#showchuncaimenu").css("display", "none");
+	setTimeout(function(){
+			jQuery("#smchuncai").fadeOut(1200);
+			jQuery("#callchuncai").css("display", "block");}, 2000);
+}
+function closechuncai_init(){
+	stopTalkSelf();
+	jQuery("#showchuncaimenu").css("display", "none");
+	setTimeout(function(){
+			jQuery("#smchuncai").css("display", "none");
+			jQuery("#callchuncai").css("display", "block");}, 30);
+}
+function callchuncai(){
+	talkSelf(talktime);
+	jQuery("#smchuncai").fadeIn('normal');
+	jQuery("#callchuncai").css("display", "none");
+	closeChuncaiMenu();
+	closeNotice();
+	chuncaiSay("我回来啦～");
+	setCookie("is_closechuncai", '', 60*60*24*30*1000);
+}
+
+function chuncaiSay(s){
+	clearChuncaiSay();
+	jQuery("#tempsaying").append(s);
+	jQuery("#tempsaying").css("display", "block");
+}
+function clearChuncaiSay(){
+	document.getElementById("tempsaying").innerHTML = '';
+}
+function closeNotice(){
+	jQuery("#chuncaisaying").css("display", "none");
+}
+function showInput(){
+	closeChuncaiMenu();
+	closeNotice();
+	chuncaiSay("............?");
+	//setFace(1);
+	jQuery("#addinput").css("display", "block");
+}
+function closeInput(){
+	setFace(3);
+	jQuery("#addinput").css("display", "none");
+}
+function clearInput(){
+	document.getElementById("talk").value = '';
+}
+function createFace(a, b, c){
+	jQuery("body").append('<div id="hiddenfaces"><img id="hf1" src="'+a+'" /><img id="hf2" src="'+b+'" /><img id="hf3" src="'+c+'" /></div>');
+	setFace(1);
+}
+function setFace(num){
+	obj = document.getElementById("hf"+num).src;
+	jQuery("#chuncaiface").attr("style", "background:url("+obj+") no-repeat scroll 50% 0% transparent;");
+}
+function getdata(el, id){
+	jQuery.ajax({
+		type:	'GET',
+		url:	path+'/?a=getdata',
+		cache:	'false',
+		dataType: 'html',
+		contentType: 'application/json; charset=utf8',
+		beforeSend: function(){
+			//jQuery("#dialog_chat").fadeOut("normal");
+			jQuery("#tempsaying").css('display', "none");
+			jQuery("#dialog_chat_loading").fadeIn("normal");
+		},
+		success: function(data){
+			jQuery("#dialog_chat_loading").css('display', "none");
+			//jQuery("#dialog_chat").fadeIn("normal");
+			jQuery("#tempsaying").css('display', "");
+			var dat = eval("("+data+")");
+			if(el == 'defaultccs'){
+				chuncaiSay(dat.defaultccs);
+			}else if(el == 'showlifetime'){
+				chuncaiSay(dat.showlifetime);
+			}else if(el == 'talking'){
+				var talkcon = jQuery("#talk").val();
+				var i = in_array(talkcon, dat.ques);
+				var types = typeof(i);
+				if(types != 'boolean'){
+					chuncaiSay(dat.ans[i]);
+					setFace(2);
+				}else{
+					chuncaiSay('.......................嗯？');
+					setFace(3);
+				}
+				clearInput();
+			}else if(el == 'foods'){
+				var str='';
+				var arr = dat.foods;
+				for(var i in arr){
+					if(arr[i] != ''){
+						str +='<ul id="f'+i+'" class="eatfood" onclick="eatfood(this.id)">'+arr[i]+'</ul>';
+					}
+				}
+				chuncaiSay(str);
+			}else if(el = "eatsay"){
+				var str = dat.eatsay[id];
+				chuncaiSay(str);
+				setFace(2);
+			}else if(el = "talkself"){
+				var arr = dat.talkself;
+				return arr;
+			}
+		},
+		error: function(){
+			chuncaiSay('好像出错了，是什么错误呢...请联系管理猿');
+		}
+		});
+}
+
+function in_array(str, arr){
+	for(var i in arr){
+		if(arr[i] == str){
+			return i;
+		}
+	}
+	return false;
+}
+
+var timenum;
+var tol=0;
+//10分钟后页面没有响应就停止活动
+var goal = 10*60;
+function setTime(){
+	tol++;
+	//document.body.innerHTML(tol);
+	timenum = window.setTimeout("setTime('"+tol+"')", 1000);
+	if(parseInt(tol) == parseInt(goal)){
+		stopTalkSelf();
+		closeChuncaiMenu();
+		closeNotice();
+		closeInput();
+		chuncaiSay("主人跑到哪里去了呢....");
+		setFace(3);
+		stoptime();
+	}
+}
+function stoptime(){
+	if(timenum){
+		clearTimeout(timenum);
+	}
+}
+var talktime = 0;
+//设置自言自语频率（单位：秒）
+var talkself = 60;
+var talkobj;
+var tsi = 0;
+var talkself_arr = [
+	["白日依山尽，黄河入海流，欲穷千里目，更上.....一层楼？", "1"],
+	["我看见主人熊猫眼又加重了！", "3"],
+	['其实，昨天在街上看见一个人穿着EVA的T恤，很想上去把他掰成两截...', "3"],
+	["我是不是很厉害呀～～？", "2"],
+	["5555...昨天有个小孩子跟我抢棒棒糖吃.....", "3"],
+	["如果让我开高达，我肯定会试试高达能不能单脚跳～ θ口θ", "2"],
+	["昨天我好像看见主人又在众人之前卖萌了，PIA死你哦～", "2"]
+];
+
+function talkSelf(talktime){
+	talktime++;
+	var tslen = talkself_arr.length;
+/*	if(parseInt(tsi) >= parseInt(tslen)){
+		tsi = 0;
+	}*/
+	var yushu = talktime%talkself;
+	if(parseInt(yushu) == parseInt(9)){
+		closeChuncaiMenu();
+		closeNotice();
+		closeInput();
+		tsi = Math.floor(Math.random() * talkself_arr.length + 1)-1;
+		chuncaiSay(talkself_arr[tsi][0]);
+		setFace(talkself_arr[tsi][1]);
+	}
+	talkobj = window.setTimeout("talkSelf("+talktime+")", 1000);
+}
+function stopTalkSelf(){
+	if(talkobj){
+		clearTimeout(talkobj);
+	}
+}
+function arrayShuffle(arr){
+	var result = [],
+	len = arr.length;
+	while(len--){
+		result[result.length] = arr.splice(Math.floor(Math.random()*(len+1)),1);
+	}
+	return result;
+}
+function setCookie(name, val, ex){
+	var times = new Date();
+	times.setTime(times.getTime() + ex);
+	if(ex == 0){
+		document.cookie = name+"="+val+";";
+	}else{
+		document.cookie = name+"="+val+"; expires="+times.toGMTString();
+	}
+}
+
+function getCookie(name){
+	var arr = document.cookie.match(new RegExp("(^| )"+name+"=([^;]*)(;|$)"));   
+	if(arr != null) return unescape(arr[2]); return null;
+}
