@@ -4,13 +4,13 @@ Requires at least: 2.9
 Tested up to: 1.1
 Stable tag: 1.1
 
+为了WP的萌化，特制伪春菜插件一枚
 a plugin for who love comic and game, named Ukagaka in Windows.
 it looks like fairy~
-为了WP的萌化，特制伪春菜插件一枚～
 
 == Installation ==
 
-1. 首先当然是下载伪春菜插件啦,请到这个链接中下载: http://www.lmyoaoa.com/inn/?p=3134
+1. 首先当然是下载伪春菜插件啦,博客发布页: http://www.lmyoaoa.com/inn/?p=3134
 
 2. 上传插件到WP的插件目录，在WP后台启用
 
