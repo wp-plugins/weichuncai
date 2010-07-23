@@ -1,6 +1,7 @@
 ﻿=== Plugin Name ===
 Contributors: lmyoaoa
 Requires at least: 2.9
+Tags: Ukagaka, 伪春菜, weichuncai
 Tested up to: 1.1
 Stable tag: 1.1
 
