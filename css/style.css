@@ -12,7 +12,7 @@
 #dialog_chat_loading {width:200px;height:30px;background:url("../imgs/loading.gif") no-repeat center center;display:none;}
 #chat_top {float:left;width:200px;height:5px;overflow:hidden;background:url("../imgs/chat_top.gif") no-repeat;}
 #dialog_chat_contents, #chuncaisaying, #getmenu, #tempsaying {float:left;margin:0;padding-left:0px;width:198px;line-height:23px;background-color:#ffffee;}
-#getmenu, #tempsaying,#chuncaisaying {padding-left:2px; width:196px;}
+#getmenu, #tempsaying,#chuncaisaying {padding:0px 0px 0px 2px; width:196px;}
 #dialog_chat_contents {width:198px;border-left:1px solid #e87a73;border-right:1px solid #e87a73;}
 #chat_bottom {width:200px;height:10px;float:left;background:url("../imgs/chat_bottom.gif") no-repeat;}
 #chat_top, #chat_bottom {}
