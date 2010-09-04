@@ -1,9 +1,9 @@
 <?php 
 /*
- * Plugin Name: WP伪春菜
+ * Plugin Name: weichuncai(WP伪春菜)
  * Plugin URI: http://www.lmyoaoa.com/inn/?p=3134
  * Description: 为了WP的萌化，特制伪春菜插件一枚!
- * Version: 1.1
+ * Version: 1.2
  * Author: lmyoaoa(油饼小明猪)
  * Author URI: http://www.lmyoaoa.com
  */
@@ -17,6 +17,7 @@ function dataToJs(){
 	if($_GET['a'] == 'getdata'){
 		$lifetime = get_wcc_lifetime($wcc['lifetime'][$wcc['defaultccs']]);
 		$wcc['showlifetime'] = '我已经与主人 '.$wcc["adminname"].' 一起生存了 <font color="red">'.$lifetime["day"].'</font> 天 <font color="red">'.$lifetime["hours"].'</font> 小时 <font color="red">'.$lifetime["minutes"].'</font> 分钟 <font color="red">'.$lifetime["seconds"].'</font> 秒的快乐时光啦～*^_^*';
+		$wcc['notice'] = stripslashes($wcc['notice']);
 		$wcc = json_encode($wcc);
 		echo $wcc;
 		die();
@@ -41,15 +42,12 @@ function get_chuncai(){
 	$fpath3 = file_exists($path.'face3.gif') ? $fpath3 : $fpath1;
 
 	$notice_str = '&nbsp;&nbsp;'.$wcc['notice'].'<br />';
-	echo '	<script>var path = "'.get_bloginfo('siteurl').'";
-		window.onload=function(){var notice=document.getElementById("chuncaisaying"); notice.innerHTML=""; notice.innerHTML="'.$notice_str.'";
-		createFace("'.$fpath1.'", "'.$fpath2.'", "'.$fpath3.'");
-		}
-		</script>';
+	echo '<script>createFace("'.$fpath1.'", "'.$fpath2.'", "'.$fpath3.'");</script>';
+	echo '	<script>var path = "'.get_bloginfo('siteurl').'";</script>';
 }
 
-add_filter('wp_head', 'get_chuncai');
 wp_enqueue_script('jquery');
+add_filter('wp_head', 'get_chuncai');
 add_action('admin_menu', 'chuncaiadminPage');
 
 

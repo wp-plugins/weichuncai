@@ -29,6 +29,9 @@ jQuery(document).ready(function(){
 		if(is_closechuncai == 'close'){
 			closechuncai_init();
 		}
+		//设置初始状态
+		getdata("getnotice");
+		setFace(1);
 
 		jQuery("#smchuncai").css('left', width+'px');
 		jQuery("#smchuncai").css('top', height+'px');
@@ -79,6 +82,10 @@ jQuery(document).ready(function(){
 				chuncaiMenu();
 				setFace(1);
 				});
+		jQuery("#shownotice").click(function(){
+				getdata("getnotice");
+                                setFace(1);
+		});
 		jQuery("#closechuncai").click(function(){
 				setFace(3);
 				closechuncai();
@@ -250,7 +257,7 @@ function clearInput(){
 	document.getElementById("talk").value = '';
 }
 function createFace(a, b, c){
-	jQuery("body").append('<div id="hiddenfaces"><img id="hf1" src="'+a+'" /><img id="hf2" src="'+b+'" /><img id="hf3" src="'+c+'" /></div>');
+	jQuery("head").append('<div id="hiddenfaces"><img id="hf1" src="'+a+'" /><img id="hf2" src="'+b+'" /><img id="hf3" src="'+c+'" /></div>');
 	setFace(1);
 }
 function setFace(num){
@@ -276,6 +283,9 @@ function getdata(el, id){
 			var dat = eval("("+data+")");
 			if(el == 'defaultccs'){
 				chuncaiSay(dat.defaultccs);
+			}else if(el == 'getnotice'){
+				chuncaiSay(dat.notice);
+				setFace(1);
 			}else if(el == 'showlifetime'){
 				chuncaiSay(dat.showlifetime);
 			}else if(el == 'talking'){

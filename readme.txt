@@ -2,7 +2,7 @@
 Contributors: lmyoaoa
 Requires at least: 2.9
 Tags: Ukagaka, 伪春菜, weichuncai
-Tested up to: 1.1
+Tested up to: 1.2
 Stable tag: 1.1
 
 为了WP的萌化，特制伪春菜插件一枚
@@ -50,6 +50,11 @@ it looks like fairy~
 直接上传覆盖即可
 
 == Changelog ==
+
+- Version 1.2:
+	+ 改进伪春菜插件加载方式，解决一些情况下与WP其他插件之间的冲突
+	+ “美化”了一次默认春菜，落鸟的图片，变成动态会眨眼睛的了...
+	+ 此次更新版本来的比较急，改进的不多，主要是解决昨天.exe同学反馈的bug
 
 - Version 1.1:
 	+ 后台设置面板一些小瑕疵与小BUG修正
