@@ -3,7 +3,7 @@ Contributors: lmyoaoa
 Requires at least: 3.1.1
 Tags: Ukagaka, 伪春菜, weichuncai
 Tested up to: 1.2.1
-Stable tag: 1.2
+Stable tag: 1.2.1
 
 为了WP的萌化，特制伪春菜插件一枚
 a plugin for who love comic and game, named Ukagaka in Windows.
