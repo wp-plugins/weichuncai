@@ -35,7 +35,7 @@ smjq(document).ready(function(){
 
 		smjq("#smchuncai").css('left', width+'px');
 		smjq("#smchuncai").css('top', height+'px');
-		smjq("#callchuncai").attr("style", "top:"+cheight+"px; left:"+cwidth+"px;");
+		smjq("#callchuncai").attr("style", "top:"+cheight+"px; left:"+cwidth+"px; text-align:center;");
 
 		smcc = document.getElementById("smchuncai");
 		smcc.onmousedown = function(){

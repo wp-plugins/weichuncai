@@ -27,8 +27,8 @@ add_action('init', 'dataToJs');
 
 //获得春菜
 function get_chuncai(){
-	echo '<link rel="stylesheet" type="text/css" href="wp-content/plugins/weichuncai/css/style.css">';
-	echo '<script src="wp-content/plugins/weichuncai/js/common.js"></script>';
+	echo '<link rel="stylesheet" type="text/css" href="'.get_bloginfo('siteurl').'/wp-content/plugins/weichuncai/css/style.css">';
+	echo '<script src="'.get_bloginfo('siteurl').'/wp-content/plugins/weichuncai/js/common.js"></script>';
 	$wcc = get_option('sm-weichuncai');
 	if($wcc == ''){
 		sm_init();
