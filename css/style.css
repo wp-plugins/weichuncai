@@ -1,4 +1,4 @@
-#smchuncai {width:160px;height:160px;position:fixed;top:400px;left:800px;font-size:12px;}
+#smchuncai {opacity:0.85;filter:alpha(opacity=85);width:160px;height:160px;position:fixed;top:400px;left:800px;font-size:12px;}
 * html #smchuncai {position:absolute;}
 #chuncaiface {width:160px;height:160px;background-repeat:no-repeat;position:absolute;top:0px;left:0px;}
 /*#chuncaimenu {width:46px;line-height:16px;float:left;font-size:12px;cursor:pointer;background-color:#666;color:#FFF;text-align:center;}*/
