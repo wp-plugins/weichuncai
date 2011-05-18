@@ -44,7 +44,6 @@ function get_chuncai(){
 		$key = str_replace( 'userdefccs_', '', $wcc['defaultccs']);
 		$fpath = $wcc['userdefccs'][$key]['face'];
 		$fpath1 = $fpath[0];
-		$size = getimagesize($fpath1);
 		$fpath2 = $fpath[1] ? $fpath[1] : $fpath1;
 		$fpath3 = $fpath[2] ? $fpath[2] : $fpath1;
 	}else {
@@ -56,13 +55,14 @@ function get_chuncai(){
 		$fpath3 = file_exists($path.'face3.gif') ? $fpath3 : $fpath1;
 	}
 
+	$size = getimagesize($fpath1);
 	$notice_str = '&nbsp;&nbsp;'.$wcc['notice'].'<br />';
-	echo '<script>createFace("'.$fpath1.'", "'.$fpath2.'", "'.$fpath3.'");</script>';
 	echo '<script>var path = "'.get_bloginfo('siteurl').'";';
 	echo "var imagewidth = '{$size[0]}';";
 	echo "var imageheight = '{$size[1]}';";	
 	echo '</script>';
 	echo '<script src="'.get_bloginfo('siteurl').'/wp-content/plugins/weichuncai/js/common.js"></script>';
+	echo '<script>createFace("'.$fpath1.'", "'.$fpath2.'", "'.$fpath3.'");</script>';
 	echo '<script>';
 	//自定义自言自语
 	if(!empty($talkself_user) && is_array($talkself_user)) {
