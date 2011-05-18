@@ -1,6 +1,50 @@
+<style>
+.chuncaidiv {
+float:left;padding:3px;text-align:center; width:168px;position:relative;
+height:200px;
+}
+</style>
 <div class="wrap">
 <?php
+
+$talkself_user = get_option('sm-wcc-talkself_user');
+#删除自言自语
+if($_POST['del_tku_sub']) {
+	if(!$_POST['del_tku']) {
+		$msg = __('请先选择一个要删除的项目!', 'weichuncai');
+	}else {
+		foreach($talkself_user['says'] as $k=>$v) {
+			if(in_array($k, $_POST['del_tku'])) {
+				unset($talkself_user['says'][$k]);
+				unset($talkself_user['face'][$k]);
+			}
+		}
+		update_option('sm-wcc-talkself_user', $talkself_user);
+		$msg = __('设置已保存!', 'weichuncai');
+	}
+}
+
+#新增自言自语
+if($_POST['talkself_user_sub']) {
+	if( count($talkself_user['says']) < 50 ) {
+		$talkself_user['says'][] = $_POST['talkself_user']['says'];
+		$talkself_user['face'][] = $_POST['talkself_user']['face'];
+		update_option('sm-wcc-talkself_user', $talkself_user);
+		$msg = __('设置已保存!', 'weichuncai');
+	}else{
+		$msg = __('设置未保存! 你的自言自语设置有点多了哦，删除一些吧.', 'weichuncai');
+	}
+}
+
+if($_POST['editchuncai']){
+	$wcc = get_option('sm-weichuncai');
+	$wcc['defaultccs'] = $_POST['defaultccs'];
+	update_option('sm-weichuncai', $wcc);
+	$msg = __('春菜更新成功!', 'weichuncai');
+}
+
 $wcc = get_option('sm-weichuncai');
+#print_r($wcc);
 if($_POST['subnotice']){
 	$wcc = get_option('sm-weichuncai');
 	$wcc['notice'] = 	$_POST['notice'];
@@ -15,25 +59,28 @@ if($_POST['subnotice']){
 	}
 	update_option('sm-weichuncai', $wcc);
 	$msg = __('设置已保存!', 'weichuncai');
-}elseif($_POST['editchuncai']){
-	$wcc = get_option('sm-weichuncai');
-	$wcc['defaultccs'] = $_POST['defaultccs'];
-	update_option('sm-weichuncai', $wcc);
-	$msg = __('春菜更新成功!', 'weichuncai');
 }
 
 if($_GET['del']){
 	$id = $_GET['ccsid'];
-	$pic = get_pic_path($wcc['ccs'][$id]);
-	foreach($pic as $k=>$v){
-		if(file_exists($v)){@unlink($v);}
+	$preg = '/userdefccs_/i';
+	if(preg_match($preg, $id) ) {
+		$id = str_replace( 'userdefccs_', '', $id );
+		unset($wcc['userdefccs'][$id]);
+		unset($wcc['lifetime'][$id]);
+		update_option('sm-weichuncai', $wcc);
+	}else{
+		$pic = get_pic_path($wcc['ccs'][$id]);
+		foreach($pic as $k=>$v){
+			if(file_exists($v)){@unlink($v);}
+		}
+		$dir = dirname(__FILE__).'/skin/'.$wcc['ccs'][$id].'/';
+		@rmdir($dir);
+		unset($wcc['lifetime'][$wcc['ccs'][$id]]);
+		unset($wcc['ccs'][$id]);
+		update_option('sm-weichuncai', $wcc);
+		echo '<script>window.location.href="?page=weichuncai/sm-options.php";</script>';
 	}
-	$dir = dirname(__FILE__).'/skin/'.$wcc['ccs'][$id].'/';
-	@rmdir($dir);
-	unset($wcc['lifetime'][$wcc['ccs'][$id]]);
-	unset($wcc['ccs'][$id]);
-	update_option('sm-weichuncai', $wcc);
-	echo '<script>window.location.href="?page=weichuncai/sm-options.php";</script>';
 }
 if($_POST['additional']){
 	$wcc['foods'] = $_POST['foods'];
@@ -41,25 +88,55 @@ if($_POST['additional']){
 	update_option('sm-weichuncai', $wcc);
 	$msg = __('附加设置更新成功!', 'weichuncai');
 }
+
+#添加春菜页面
+if( $_GET['cp'] == 1 && $_POST['new_userdef_ccs_sub']) {
+	#print_r($_POST);
+	$wcc['userdefccs'][$_POST['userdefccs']] = array('name'=>$_POST['userdefccs'], 
+	'face'=>$_POST['face'],
+	);
+	$wcc['lifetime'][$_POST['userdefccs']] = time();;
+	update_option('sm-weichuncai', $wcc);
+	$msg = __('添加伪春菜成功!', 'weichuncai');
+}
+
 if(isset($msg)){
 	echo '<div id="message" class="updated fade"><p>'.$msg.'</p></div>';
 }
 ?>
 <h1><?php _e("伪春菜控制面板", "weichuncai"); ?></h1>
+<p><a href="options-general.php?page=weichuncai/sm-options.php"><?php _e('通用设置', 'weichuncai'); ?></a> | <a href="options-general.php?page=weichuncai/sm-options.php&cp=1"><?php _e('创建伪春菜', 'weichuncai'); ?></a></p>
 <hr>
+<?php 
+if($_GET['cp'] != '1') {
+
+?>
 <form action="" method="post">
 <h4><?php _e("设置默认春菜", "weichuncai"); ?></h4>
 <p>
+<div style="float:left;width:100%;*width:672px;">
 <?php
 	foreach($wcc['ccs'] as $k=>$v){
 		if($v == $wcc['defaultccs']){
-			echo '<div style="float:left;padding:3px;text-align:center; width:168px;"><img src="../wp-content/plugins/weichuncai/skin/'.$v.'/face1.gif"><p><input type="radio" name="defaultccs" value="'.$v.'" checked> '.$v.'</p></div>';
+			echo '<div style="" class="chuncaidiv"><img src="../wp-content/plugins/weichuncai/skin/'.$v.'/face1.gif"><p><input type="radio" name="defaultccs" value="'.$v.'" checked> '.$v.'</p></div>';
 		}else{
 			$isdelcc = __("删除？", "weichuncai");
-			echo '<div style="float:left;padding:3px;text-align:center; width:168px;position:relative;"><img src="../wp-content/plugins/weichuncai/skin/'.$v.'/face1.gif"><p><input type="radio" name="defaultccs" value="'.$v.'"> '.$v.'(<a href="?page=weichuncai/sm-options.php&del=del&ccsid='.$k.'">'.$isdelcc.'</a>)</p></div>';
+			echo '<div class="chuncaidiv" style=""><img src="../wp-content/plugins/weichuncai/skin/'.$v.'/face1.gif"><p><input type="radio" name="defaultccs" value="'.$v.'"> '.$v.'(<a href="?page=weichuncai/sm-options.php&del=del&ccsid='.$k.'">'.$isdelcc.'</a>)</p></div>';
+		}
+	}
+
+	if( !empty($wcc['userdefccs']) ) {
+		foreach( $wcc['userdefccs'] as $k=>$v ) {
+			if( 'userdefccs_'.$k == $wcc['defaultccs'] ) {
+				echo '<div class="chuncaidiv"><img src="'.$v['face'][0].'"><p><input type="radio" name="defaultccs" value="userdefccs_'.$k.'" checked="checked"> '.$k.'</p></div>';
+			}else{
+				$isdelcc = __("删除？", "weichuncai");
+				echo '<div class="chuncaidiv" style=""><img src="'.$v['face'][0].'"><p><input type="radio" name="defaultccs" value="userdefccs_'.$k.'"> '.$k.'(<a href="?page=weichuncai/sm-options.php&del=del&ccsid=userdefccs_'.$k.'">'.$isdelcc.'</a>)</p></div>';
+			}
 		}
 	}
 ?>
+</div>
 </p>
 
 
@@ -71,26 +148,10 @@ if(isset($msg)){
 <form action="" method="post">
 	<label>1. <?php _e('你希望伪春菜如何称呼你呢？', 'weichuncai'); ?></label>
 	<p><input type="text" name="adminname" value="<?php echo $wcc['adminname']; ?>"></p>
-	<!--label>2. <?php _e('是否默认显示公告(选是的话打开博客是伪春菜不说话而是先显示博客公告)', 'weichuncai'); ?></label>
-	<p>
-<?php
-	if($wcc['isnotice'] == 1){
-?>
-		<input type="radio" name="isnotice" value="1" checked> <?php _e('默认显示公告 ', 'weichuncai'); ?>
-		<input type="radio" name="isnotice" value="0"> <?php _e('默认不显示公告', 'weichuncai'); ?>
-<?php
-	}else{
-?>
-		<input type="radio" name="isnotice" value="1"> <?php _e('默认显示公告 ', 'weichuncai'); ?>
-		<input type="radio" name="isnotice" value="0" checked> <?php _e('默认不显示公告', 'weichuncai'); ?>
-<?php
-	}
-?>
-	</p-->
-	<label>3. <?php _e('公告：', 'weichuncai'); ?></label>
+	<label>2. <?php _e('公告：', 'weichuncai'); ?></label>
 	<p><textarea name="notice" cols="40" rows="7"><?php echo $wcc['notice']; ?></textarea></p>
 
-	<label>4. <?php _e('对话回应', 'weichuncai'); ?><p style="color:red">(<?php _e('在这里设置了问题与回答后，在前台的聊天功能中输入相关问题伪春菜就会回答，如输入：早上好，伪春菜会回答：“早上好～”,暂时最多只支持5个问答', 'weichuncai'); ?>)</p></label>
+	<label>3. <?php _e('对话回应', 'weichuncai'); ?><p style="color:red">(<?php _e('在这里设置了问题与回答后，在前台的聊天功能中输入相关问题伪春菜就会回答，如输入：早上好，伪春菜会回答：“早上好～”,暂时最多只支持5个问答', 'weichuncai'); ?>)</p></label>
 <?php
 	$i = 1;
 	foreach($wcc['ques'] as $k=>$v){
@@ -99,24 +160,40 @@ if(isset($msg)){
 	}
 ?>
 
-<h4><?php _e('添加新春菜', 'weichuncai'); ?></h4>
-<label><label><?php _e('说明步骤：', 'weichuncai'); ?></label>
-					<p>1. <?php _e('先在本地新建文件夹，在文件夹中添加你们喜欢的角色图片，文件命名格式为face1.gif / face2.gif / face3.gif', 'weichuncai'); ?></p>
-					<p>2. <?php _e('上传新春菜的皮肤文件夹到插件目录下的skin目录', 'weichuncai'); ?></p>
-					<p>3. <?php _e('在下面“新春菜名字”输入春菜名字（跟你上传的文件夹名字相同）', 'weichuncai'); ?></p>
-<p><p style="color:red"><?php _e('注意：', 'weichuncai'); ?></p>
-<p>1.<?php _e('图片一定要是GIF格式，大小为宽:160px 高:160px.', 'weichuncai'); ?></p>
-			<p>2.<?php _e('face1.gif对应普通状态下的表情，face2.gif对应高兴时的表情，face3对应悲伤时春菜的表情。', 'weichuncai'); ?></p>
-<p>3. <?php _e('图片可以只有一张，但一定要命名成face1.gif', 'weichuncai'); ?></p></p></label>
-<label><?php _e('新春菜名字：', 'weichuncai'); ?><input type="text" name="wccnew"></label>
-
 <p class="submit"><input class="button-primary" type="submit" name="subnotice" value="<?php _e('更新设置', 'weichuncai'); ?>"></p>
+</form>
+<hr>
+
+<h4><?php _e('自言自语设置', 'weichuncai'); ?></h4>
+<p>设置伪春菜自言自语时说的话，<font color"red">最多允许自定义50项。</font></p>
+<form action="" method="post">
+<?php
+	if(!empty($talkself_user) && is_array($talkself_user) ) {
+		$tmpk = 1;
+		foreach($talkself_user['says'] as $k=>$v) {
+			echo '<p><input type="checkbox" name="del_tku[]" value="'.$k.'">设定言语'.$tmpk.': '.stripslashes($v).'</p>';
+			$tmpk++;
+		}
+		echo '<input class="button-primary" type="submit" name="del_tku_sub" value="删除选中项" />';
+	}
+?>
+</form>
+<form action="" method="post">
+<?php
+	echo '<p>'.__('新增', 'weichuncai').'：<input type="text" name="talkself_user[says]" style="width:300px;" value=""> '.__('对应表情', 'weichuncai').'：';
+	echo '<select type="text" name="talkself_user[face]">';
+	echo '<option value="1">表情1</option>';
+	echo '<option value="2">表情2</option>';
+	echo '<option value="3">表情3</option>';
+	echo '</select>';
+	echo ' <input  class="button-primary" type="submit" name="talkself_user_sub" value="'.__('添加', 'weichuncai').'" /></p>';
+?>
 </form>
 <hr>
 <h4><?php _e('附加设置', 'weichuncai'); ?></h4>
 
 <form action="" method="post">
-	<label><?php _e('零食：', 'weichuncai'); ?>
+	<p><?php _e('零食：', 'weichuncai'); ?></p>
 <?php
 	$fom = 1;
 	for($fo=0; $fo < 5; $fo++){
@@ -124,7 +201,6 @@ if(isset($msg)){
 		++$fom;
 	}
 ?>
-	</label>
 <p class="submit"><input class="button-primary" type="submit" name="additional" value="<?php _e('保存附加设置', 'weichuncai'); ?>" /></p>
 </form>
 <hr>
@@ -138,4 +214,21 @@ if(isset($msg)){
 
 <p>
 </p>
+
+<?php
+}elseif($_GET['cp'] == 1) {
+?>
+<form action="" method="post">
+<p><?php _e('春菜名字', 'weichuncai'); ?>：<input type="text" name="userdefccs" value="" /></p>
+<p><?php _e('提示：复制图片地址到下面文本框。或者你可以到', 'weichuncai'); ?><a target="_blank" href="media-new.php"><?php _e('上传图片', 'weichuncai'); ?></a><?php _e('先进行上传。图片应小于160像素。', 'weichuncai'); ?></p>
+<p><font color="red">*</font><?php _e('表&nbsp;&nbsp;&nbsp;&nbsp;情1(普通)：', 'weichuncai'); ?><input style="width:350px;" type="text" name="face[]" value="" />
+<p>&nbsp;&nbsp;<?php _e('表&nbsp;&nbsp;&nbsp;&nbsp;情2(开心)：', 'weichuncai'); ?><input style="width:350px;" type="text" name="face[]" value="" />
+<p>&nbsp;&nbsp;<?php _e('表&nbsp;&nbsp;&nbsp;&nbsp;情3(悲伤)：', 'weichuncai'); ?><input style="width:350px;" type="text" name="face[]" value="" />
+
+<p><?php _e('注：图片可以只上传第一张，发挥想象创造吧～', 'weichuncai'); ?></p>
+<p><input class="button-primary" type="submit" name="new_userdef_ccs_sub" value="<?php _e('新增春菜', 'weichuncai'); ?>" />
+</form>
+<?php
+}
+?>
 </div>

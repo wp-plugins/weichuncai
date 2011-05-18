@@ -2,8 +2,8 @@
 Contributors: lmyoaoa
 Requires at least: 3.1.1
 Tags: Ukagaka, 伪春菜, weichuncai
-Tested up to: 1.2.1
-Stable tag: 1.2.1
+Tested up to: 1.3
+Stable tag: 1.3
 
 为了WP的萌化，特制伪春菜插件一枚
 a plugin for who love comic and game, named Ukagaka in Windows.
@@ -50,6 +50,12 @@ it looks like fairy~
 直接上传覆盖即可
 
 == Changelog ==
+- Version 1.3(2011-05-18):
+	+ 解决旧版致命的“更新春菜时，自定义的人格被删除的”恶性bug
+	+ 删除旧版繁琐的创建春菜步骤，单独使用“创建伪春菜”子面板进行简单添加
+	+ 管理后台添加了“自言自语设置”功能，可以让伪春菜人格说更多的话啦～
+	+ 修正了“附加设置”中添加食物时文本框的bug
+	+ 新功能继续构思中...
 
 - Version 1.2.1(2011-04-08):
 	+ 除去在不使用默认?p=123格式的链接时，文章页面不显示春菜的低级bug
