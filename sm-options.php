@@ -1,7 +1,10 @@
 <style>
 .chuncaidiv {
 float:left;padding:3px;text-align:center; width:168px;position:relative;
-height:200px;
+overflow:hidden;
+}
+.chuncaidiv img {
+	height:50px;
 }
 </style>
 <div class="wrap">

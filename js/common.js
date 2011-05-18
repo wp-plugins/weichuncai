@@ -6,8 +6,8 @@ smjq(document).ready(function(){
 			var width = getwidth;
 			var height = getheight;
 		}else{
-			var width = document.documentElement.clientWidth-300;
-			var height = document.documentElement.clientHeight-200;
+			var width = document.documentElement.clientWidth- 200 - imagewidth;
+			var height = document.documentElement.clientHeight- 180 - imageheight;
 		}
 
 		var cwidth = document.documentElement.clientWidth-100;
@@ -35,6 +35,8 @@ smjq(document).ready(function(){
 
 		smjq("#smchuncai").css('left', width+'px');
 		smjq("#smchuncai").css('top', height+'px');
+		smjq("#smchuncai").css('width', imagewidth+'px');
+		smjq("#smchuncai").css('height', imageheight+'px');
 		smjq("#callchuncai").attr("style", "top:"+cheight+"px; left:"+cwidth+"px; text-align:center;");
 
 		smcc = document.getElementById("smchuncai");
@@ -262,7 +264,7 @@ function createFace(a, b, c){
 }
 function setFace(num){
 	obj = document.getElementById("hf"+num).src;
-	smjq("#chuncaiface").attr("style", "background:url("+obj+") no-repeat scroll 50% 0% transparent;");
+	smjq("#chuncaiface").attr("style", "background:url("+obj+") no-repeat scroll 50% 0% transparent; width:"+imagewidth+"px;height:"+imageheight+"px;");
 }
 function getdata(el, id){
 	smjq.ajax({
@@ -364,7 +366,6 @@ var tsi = 0;
 var talkself_arr = [
 	["白日依山尽，黄河入海流，欲穷千里目，更上.....一层楼？", "1"],
 	["我看见主人熊猫眼又加重了！", "3"],
-	['其实，昨天在街上看见一个人穿着EVA的T恤，很想上去把他掰成两截...', "3"],
 	["我是不是很厉害呀～～？", "2"],
 	["5555...昨天有个小孩子跟我抢棒棒糖吃.....", "3"],
 	["如果让我开高达，我肯定会试试高达能不能单脚跳～ θ口θ", "2"],
