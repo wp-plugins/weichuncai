@@ -3,7 +3,7 @@
  * Plugin Name: weichuncai(WP伪春菜)
  * Plugin URI: http://www.lmyoaoa.com/inn/?p=3134
  * Description: 为了WP的萌化，特制伪春菜插件一枚!
- * Version: 1.3
+ * Version: 1.3.1
  * Author: lmyoaoa(油饼小明猪)
  * Author URI: http://www.lmyoaoa.com
  */
