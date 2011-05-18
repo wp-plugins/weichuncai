@@ -61,7 +61,9 @@ function get_chuncai(){
 	echo '<script>var path = "'.get_bloginfo('siteurl').'";';
 	echo "var imagewidth = '{$size[0]}';";
 	echo "var imageheight = '{$size[1]}';";	
+	echo '</script>';
 	echo '<script src="'.get_bloginfo('siteurl').'/wp-content/plugins/weichuncai/js/common.js"></script>';
+	echo '<script>';
 	//自定义自言自语
 	if(!empty($talkself_user) && is_array($talkself_user)) {
 		$talkself_user_str = 'var talkself_user = [ ';
