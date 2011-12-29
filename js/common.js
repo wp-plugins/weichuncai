@@ -305,8 +305,9 @@ function getdata(el, id){
 			}else if(el == 'foods'){
 				var str='';
 				var arr = dat.foods;
+				var preg = /function/;
 				for(var i in arr){
-					if(arr[i] != ''){
+					if(arr[i] != '' && !preg.test(arr[i]) ){
 						str +='<ul id="f'+i+'" class="eatfood" onclick="eatfood(this.id)">'+arr[i]+'</ul>';
 					}
 				}
