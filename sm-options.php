@@ -168,7 +168,7 @@ if($_GET['cp'] != '1') {
 <hr>
 
 <h4><?php _e('自言自语设置', 'weichuncai'); ?></h4>
-<p>设置伪春菜自言自语时说的话，<font color"red">最多允许自定义50项。</font></p>
+<p><?php _e('设置伪春菜自言自语时说的话，', 'weichuncai');?><font color="red"><?php _e('最多允许自定义50项。', 'weichuncai'); ?></font></p>
 <form action="" method="post">
 <?php
 	if(!empty($talkself_user) && is_array($talkself_user) ) {
