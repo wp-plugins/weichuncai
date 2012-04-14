@@ -1,6 +1,4 @@
 var smjq = jQuery;
-var _typei = 0;
-var weichuncai_text = '';
 smjq(document).ready(function(){
 		var getwidth = getCookie("historywidth");
 		var getheight = getCookie("historyheight");
@@ -23,9 +21,9 @@ smjq(document).ready(function(){
 		var docMouseMoveEvent = document.onmousemove;
 		var docMouseUpEvent = document.onmouseup;
 
-		smjq("body").append('<div id="smchuncai" onfocus="this.blur();" style="color:#626262;z-index:999;"><div id="chuncaiface"></div><div id="dialog_chat"><div id="chat_top"></div><div id="dialog_chat_contents"><div id="dialog_chat_loading"></div><div id="tempsaying"></div><div id="showchuncaimenu"><ul class="wcc_mlist" id="shownotice">显示公告</ul><ul class="wcc_mlist" id="chatTochuncai">聊&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;天</ul><ul class="wcc_mlist" id="foods">吃 零 食</ul><ul class="wcc_mlist" id="blogmanage">博客后台</ul><ul class="wcc_mlist" id="lifetimechuncai">生存时间</ul><ul class="wcc_mlist" id="closechuncai">关闭春菜</ul></div><div><ul id="chuncaisaying"></ul></div><div id="getmenu"> </div></div><div id="chat_bottom"></div></div></div>');
+		smjq("body").append('<div id="smchuncai" onfocus="this.blur();" style="color:#626262;z-index:999;"><div id="chuncaiface"></div><div id="dialog_chat"><div id="chat_top"></div><div id="dialog_chat_contents"><div id="dialog_chat_loading"></div><div id="tempsaying"></div><div id="showchuncaimenu"><ul class="wcc_mlist" id="shownotice">show notice</ul><ul class="wcc_mlist" id="chatTochuncai">Chat</ul><ul class="wcc_mlist" id="foods">Eat Foods</ul><ul class="wcc_mlist" id="blogmanage">Dashboard</ul><ul class="wcc_mlist" id="lifetimechuncai">Life Time</ul><ul class="wcc_mlist" id="closechuncai">Close Chobit</ul></div><div><ul id="chuncaisaying"></ul></div><div id="getmenu"> </div></div><div id="chat_bottom"></div></div></div>');
 		smjq("#smchuncai").append('<div id="addinput"><div id="inp_l"><input id="talk" type="text" name="mastersay" value="" /> <input id="talkto" type="button" value=" " /></div><div id="inp_r"> X </div></div>');
-		smjq("body").append('<div id="callchuncai">召唤春菜</div>');
+		smjq("body").append('<div id="callchuncai">Call Chobit</div>');
 		//判断春菜是否处于隐藏状态
 		var is_closechuncai = getCookie("is_closechuncai");
 		if(is_closechuncai == 'close'){
@@ -114,7 +112,7 @@ smjq(document).ready(function(){
 				});
 		smjq("#inp_r").click(function(){
 				closeInput();
-				chuncaiSay('不聊天了吗？(→_→)');
+				chuncaiSay('Do not chat?(→_→)');
 				setFace(3);
 				});
 		smjq("#talkto").click(function(){
@@ -124,7 +122,7 @@ smjq(document).ready(function(){
 				closeChuncaiMenu();
 				closeNotice();
 				smjq("#getmenu").css("display", "none");
-				chuncaiSay("马上就跳转到后台管理页面去了哦～～～");
+				chuncaiSay("Let's go to Dashboard～～～");
 				setFace(2);
 				setTimeout(function(){
 					window.location.href = path+'/wp-admin/';
@@ -163,17 +161,17 @@ var eattimes = 0;
 function eatfood(obj){
 	var gettimes = getCookie("eattimes");
 	if(parseInt(gettimes) > parseInt(9)){
-		chuncaiSay("主人是个大混蛋！！");
+		chuncaiSay("Master is a villain!!!");
 		setFace(3);
 		closechuncai_evil();
 	}else if(parseInt(gettimes) > parseInt(7)){
-		chuncaiSay(".....................肚子要炸了，死也不要再吃了～～！！！TAT");
+		chuncaiSay(".....................Belly will bomb!!! I want not eat any more~~~TAT");
 		setFace(3);
 	}else if(parseInt(gettimes) == parseInt(5)){
-		chuncaiSay("我已经吃饱了，不要再吃啦......");
+		chuncaiSay("I'm full...Wantn't eat any more......");
 		setFace(3);
 	}else if(parseInt(gettimes) == parseInt(3)){
-		chuncaiSay("多谢款待，我吃饱啦～～～ ╰（￣▽￣）╭");
+		chuncaiSay("Thank for foods，I am full ~~~╰（￣▽￣）╭");
 		setFace(2);
 	}else{
 		var id = obj.replace("f",'');
@@ -186,7 +184,7 @@ function chuncaiMenu(){
 	//smjq("#showchuncaimenu").slideDown('fast').show();
 	clearChuncaiSay();
 	closeInput();
-	chuncaiSay("准备做什么呢？");
+	chuncaiSay("What do you want to do?");
 	smjq("#showchuncaimenu").css("display", "block");
 	smjq("#getmenu").css("display", "none");
 	smjq("#chuncaisaying").css("display", "none");
@@ -203,7 +201,7 @@ function showNotice(){
 }
 function closechuncai(){
 	stopTalkSelf();
-	chuncaiSay("记得再叫我出来哦...");
+	chuncaiSay("Please remember call me again...");
 	smjq("#showchuncaimenu").css("display", "none");
 	setTimeout(function(){
 			smjq("#smchuncai").fadeOut(1200);
@@ -231,7 +229,7 @@ function callchuncai(){
 	smjq("#callchuncai").css("display", "none");
 	closeChuncaiMenu();
 	closeNotice();
-	chuncaiSay("我回来啦～");
+	chuncaiSay("I am back");
 	setCookie("is_closechuncai", '', 60*60*24*30*1000);
 }
 
@@ -239,8 +237,6 @@ function chuncaiSay(s){
 	clearChuncaiSay();
 	smjq("#tempsaying").append(s);
 	smjq("#tempsaying").css("display", "block");
-	weichuncai_text = s;
-	typeWords();
 }
 function clearChuncaiSay(){
 	document.getElementById("tempsaying").innerHTML = '';
@@ -302,14 +298,14 @@ function getdata(el, id){
 					chuncaiSay(dat.ans[i]);
 					setFace(2);
 				}else{
-					chuncaiSay('.......................嗯？');
+					chuncaiSay('.......................what?');
 					setFace(3);
 				}
 				clearInput();
 			}else if(el == 'foods'){
 				var str='';
 				var arr = dat.foods;
-				var preg = /function/;	
+				var preg = /function/;
 				for(var i in arr){
 					if(arr[i] != '' && !preg.test(arr[i]) ){
 						str +='<ul id="f'+i+'" class="eatfood" onclick="eatfood(this.id)">'+arr[i]+'</ul>';
@@ -326,7 +322,7 @@ function getdata(el, id){
 			}
 		},
 		error: function(){
-			chuncaiSay('好像出错了，是什么错误呢...请联系管理猿');
+			chuncaiSay('something is wrong...please contact admin.');
 		}
 		});
 }
@@ -353,7 +349,7 @@ function setTime(){
 		closeChuncaiMenu();
 		closeNotice();
 		closeInput();
-		chuncaiSay("主人跑到哪里去了呢....");
+		chuncaiSay("Where is my master....?");
 		setFace(3);
 		stoptime();
 	}
@@ -369,11 +365,8 @@ var talkself = 60;
 var talkobj;
 var tsi = 0;
 var talkself_arr = [
-	["白日依山尽，黄河入海流，欲穷千里目，更上.....一层楼？", "1"],
-	["我看见主人熊猫眼又加重了！", "3"],
-	["我是不是很厉害呀～～？", "2"],
-	["5555...昨天有个小孩子跟我抢棒棒糖吃.....", "3"],
-	["昨天我好像看见主人又在众人之前卖萌了哦～", "2"]
+	["Master!Master!Master! Where are you", "3"],
+	["I'm tiny super man~~", "2"],
 ];
 
 function talkSelf(talktime){
@@ -406,25 +399,6 @@ function arrayShuffle(arr){
 	}
 	return result;
 }
-
-
-function typeWords() {
-	var p = 1;
-	var str = weichuncai_text.substr(0,_typei);
-	var w = weichuncai_text.substr(_typei,1);
-	if(w=="<"){
-		str += weichuncai_text.substr(_typei,weichuncai_text.substr(_typei).indexOf(">")+1);
-		p= weichuncai_text.substr(_typei).indexOf(">")+1;
-	}
-	_typei+=p;
-	document.getElementById("tempsaying").innerHTML = str;
-	txtst = setTimeout("typeWords()",20);
-	if (_typei> weichuncai_text.length){
-		clearTimeout(txtst);
-		_typei = 0;
-	}
-}
-
 function setCookie(name, val, ex){
 	var times = new Date();
 	times.setTime(times.getTime() + ex);
@@ -439,4 +413,3 @@ function getCookie(name){
 	var arr = document.cookie.match(new RegExp("(^| )"+name+"=([^;]*)(;|$)"));   
 	if(arr != null) return unescape(arr[2]); return null;
 }
-
