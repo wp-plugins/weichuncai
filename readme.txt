@@ -2,7 +2,7 @@
 Contributors: lmyoaoa
 Requires at least: 3.1.1
 Tags: Ukagaka, 伪春菜, weichuncai
-Tested up to: 1.3.1
+Tested up to: 1.4
 Stable tag: 1.3.1
 
 为了WP的萌化，特制伪春菜插件一枚
@@ -13,9 +13,11 @@ it looks like fairy~
 
 1. 首先当然是下载伪春菜插件啦,博客发布页: http://www.lmyoaoa.com/inn/?p=3134
 
-2. 上传插件到WP的插件目录，在WP后台启用
+2. 伪春菜相关的文章及萌图列表：http://www.lmyoaoa.com/inn/archives/category/wp-weichuncai/
 
-3. 完毕～
+3. 上传插件到WP的插件目录，在WP后台启用
+
+4. 完毕～
 
 == Description ==
 
@@ -50,6 +52,12 @@ it looks like fairy~
 直接上传覆盖即可
 
 == Changelog ==
+- Version 1.4(2012-04-14):
+	+ 解决某些博客在喂食菜单中出现js的bug
+	+ 新增common.js的英文版，这个大家应该用不到，english only
+	+ 完善英文版本的翻译
+	+ 文字的动态输出效果
+
 - Version 1.3.1(2011-05-18):
 	+ 新增的人格图片可以任意大小
 	+ 伪春菜半透明
