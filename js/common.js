@@ -10,6 +10,9 @@ smjq(document).ready(function(){
 		}else{
 			var width = document.documentElement.clientWidth- 200 - imagewidth;
 			var height = document.documentElement.clientHeight- 180 - imageheight;
+			if(parseInt(height) > 2000) {
+				var height = smjq(window).height() - 180 - imageheight;
+			}
 		}
 
 		var cwidth = document.documentElement.clientWidth-100;
