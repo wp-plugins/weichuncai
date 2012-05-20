@@ -74,6 +74,8 @@ function get_chuncai(){
 			$dot = ',';
 		}
 		$talkself_user_str .= ' ];';
+	}else{
+		echo "var talkself_user = [];";
 	}
 	echo $talkself_user_str;
 	echo 'var talkself_arr = talkself_arr.concat(talkself_user);';
