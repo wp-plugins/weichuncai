@@ -10,9 +10,6 @@ smjq(document).ready(function(){
 		}else{
 			var width = document.documentElement.clientWidth- 200 - imagewidth;
 			var height = document.documentElement.clientHeight- 180 - imageheight;
-			if(parseInt(height) > 2000) {
-				var height = smjq(window).height() - 180 - imageheight;
-			}
 		}
 
 		var cwidth = document.documentElement.clientWidth-100;
@@ -27,7 +24,7 @@ smjq(document).ready(function(){
 		var docMouseUpEvent = document.onmouseup;
 
 		smjq("body").append('<div id="smchuncai" onfocus="this.blur();" style="color:#626262;z-index:999;"><div id="chuncaiface"></div><div id="dialog_chat"><div id="chat_top"></div><div id="dialog_chat_contents"><div id="dialog_chat_loading"></div><div id="tempsaying"></div><div id="showchuncaimenu"><ul class="wcc_mlist" id="shownotice">显示公告</ul><ul class="wcc_mlist" id="chatTochuncai">聊&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;天</ul><ul class="wcc_mlist" id="foods">吃 零 食</ul><ul class="wcc_mlist" id="blogmanage">博客后台</ul><ul class="wcc_mlist" id="lifetimechuncai">生存时间</ul><ul class="wcc_mlist" id="closechuncai">关闭春菜</ul></div><div><ul id="chuncaisaying"></ul></div><div id="getmenu"> </div></div><div id="chat_bottom"></div></div></div>');
-		smjq("#smchuncai").append('<div id="addinput"><div id="inp_l"><input id="talk" type="text" name="mastersay" value="" /> <input id="talkto" type="button" value=" " /></div><div id="inp_r"> X </div></div>');
+		smjq("#smchuncai").append('<div id="addinput"><div id="inp_l"><input id="talk" type="text" name="mastersay" onkeydown="if(event.keyCode==13){submitTalk(this);}" value="" /> <input id="talkto" type="button" value=" " /></div><div id="inp_r"> X </div></div>');
 		smjq("body").append('<div id="callchuncai">召唤春菜</div>');
 		//判断春菜是否处于隐藏状态
 		var is_closechuncai = getCookie("is_closechuncai");
@@ -443,3 +440,6 @@ function getCookie(name){
 	if(arr != null) return unescape(arr[2]); return null;
 }
 
+function submitTalk(t) {
+	getdata("talking");
+}
