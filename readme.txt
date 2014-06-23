@@ -2,8 +2,8 @@
 Contributors: lmyoaoa
 Requires at least: 3.1.1
 Tags: Ukagaka, 伪春菜, weichuncai
-Tested up to: 1.4
-Stable tag: 1.3.1
+Tested up to: 1.5
+Stable tag: 1.4
 
 为了WP的萌化，特制伪春菜插件一枚
 a plugin for who love comic and game, named Ukagaka in Windows.
@@ -52,6 +52,12 @@ it looks like fairy~
 直接上传覆盖即可
 
 == Changelog ==
+- Version 1.5(2013-05-21):
+	+ 重写js代码
+    + 增加问答功能选项可增加至100个
+    + 修复公告处html代码多次编辑后反斜杠的bug
+    + php部分代码看着头疼懒得动也没空动
+
 - Version 1.4(2012-04-14):
 	+ 解决某些博客在喂食菜单中出现js的bug
 	+ 新增common.js的英文版，这个大家应该用不到，english only

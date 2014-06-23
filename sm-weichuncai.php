@@ -3,7 +3,7 @@
  * Plugin Name: weichuncai(WP伪春菜)
  * Plugin URI: http://www.lmyoaoa.com/inn/?p=3134
  * Description: 为了WP的萌化，特制伪春菜插件一枚!
- * Version: 1.4
+ * Version: 1.5
  * Author: lmyoaoa(油饼小明猪)
  * Author URI: http://www.lmyoaoa.com
  */
@@ -62,7 +62,7 @@ function get_chuncai(){
 	echo "var imageheight = '{$size[1]}';";	
 	echo '</script>';
 	echo '<script src="'.get_bloginfo('siteurl').'/wp-content/plugins/weichuncai/js/common.js"></script>';
-	echo '<script>createFace("'.$fpath1.'", "'.$fpath2.'", "'.$fpath3.'");</script>';
+	echo '<script>smWCC.createFace("'.$fpath1.'", "'.$fpath2.'", "'.$fpath3.'");</script>';
 	echo '<script>';
 	//自定义自言自语
 	if(!empty($talkself_user) && is_array($talkself_user)) {
@@ -78,7 +78,7 @@ function get_chuncai(){
 		echo "var talkself_user = [];";
 	}
 	echo $talkself_user_str;
-	echo 'var talkself_arr = talkself_arr.concat(talkself_user);';
+	echo 'smWCC.talkself_arr = smWCC.talkself_arr.concat(talkself_user);';
 	echo '</script>';
 }
 

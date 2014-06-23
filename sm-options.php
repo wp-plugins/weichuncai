@@ -47,12 +47,19 @@ if($_POST['editchuncai']){
 }
 
 $wcc = get_option('sm-weichuncai');
-#print_r($wcc);
 if($_POST['subnotice']){
 	$wcc = get_option('sm-weichuncai');
 	$wcc['notice'] = 	$_POST['notice'];
 	$wcc['adminname'] = 	$_POST['adminname'];
 	$wcc['isnotice'] = 	$_POST['isnotice'];
+    if( $_POST['ques']) {
+        foreach( $_POST['ques'] as $k=>$v ) {
+            if( trim($v)=='' ) {
+                unset($_POST['ques'][$k]);
+                unset($_POST['ans'][$k]);
+            }
+        }
+    }
 	$wcc['ques'] =		$_POST['ques'];
 	$wcc['ans'] =		$_POST['ans'];
 	$wccnew = $_POST['wccnew'];
@@ -94,7 +101,6 @@ if($_POST['additional']){
 
 #添加春菜页面
 if( $_GET['cp'] == 1 && $_POST['new_userdef_ccs_sub']) {
-	#print_r($_POST);
 	$wcc['userdefccs'][$_POST['userdefccs']] = array('name'=>$_POST['userdefccs'], 
 	'face'=>$_POST['face'],
 	);
@@ -152,16 +158,45 @@ if($_GET['cp'] != '1') {
 	<label>1. <?php _e('你希望伪春菜如何称呼你呢？', 'weichuncai'); ?></label>
 	<p><input type="text" name="adminname" value="<?php echo $wcc['adminname']; ?>"></p>
 	<label>2. <?php _e('公告：', 'weichuncai'); ?></label>
-	<p><textarea name="notice" cols="40" rows="7"><?php echo $wcc['notice']; ?></textarea></p>
+	<p><textarea name="notice" cols="40" rows="7"><?php echo stripslashes($wcc['notice']); ?></textarea></p>
 
-	<label>3. <?php _e('对话回应', 'weichuncai'); ?><p style="color:red">(<?php _e('在这里设置了问题与回答后，在前台的聊天功能中输入相关问题伪春菜就会回答，如输入：早上好，伪春菜会回答：“早上好～”,暂时最多只支持5个问答', 'weichuncai'); ?>)</p></label>
+	<label>3. <?php _e('对话回应', 'weichuncai'); ?><p style="color:red">(<?php _e('在这里设置了问题与回答后，在前台的聊天功能中输入相关问题伪春菜就会回答，如输入：早上好，伪春菜会回答：“早上好～”,暂时最多支持100个问答', 'weichuncai'); ?>)</p></label>
+    <div id="ques_block">
 <?php
 	$i = 1;
 	foreach($wcc['ques'] as $k=>$v){
-		echo '<p>问'.$i.'：<input type="text" name="ques['.$k.']" value="'.$v.'"> 答'.$i.'：<input type="text" name="ans['.$k.']" value="'.$wcc["ans"][$k].'"></p>';
+		echo '<p>问'.$i.'：<input type="text" name="ques[]" value="'.$v.'"> 答'.$i.'：<input type="text" name="ans[]" value="'.$wcc["ans"][$k].'">&nbsp;<a href="javascript:;" class="del_ques">删除</a></p>';
 		$i++;
 	}
 ?>
+    </div>
+    <p><a href="javascript:;" id="add_ques">增加问答选项</a></p>
+<script>
+jQuery(document).ready(function(){
+    jQuery("#ques_block .del_ques").click(function(){
+        var qc = 0;
+        jQuery(".del_ques").each(function(){
+            ++qc;
+        });
+        if( qc < 2 ) {
+            alert('问答必须要有一个，你懂的。');
+            return false;
+        }
+        jQuery(this).parent('p').remove();
+    });
+    jQuery("#add_ques").click(function(){
+        var qc = 1;
+        jQuery(".del_ques").each(function(){
+            ++qc;
+        });
+        if(qc > 100) {
+            alert('最多只能添加100个问答');
+            return false;
+        }
+        jQuery('<p>问'+qc+'：<input type="text" name="ques[]" value=""> 答'+qc+'：<input type="text" name="ans[]" value="">&nbsp;<a href="javascript:;" class="del_ques">删除</a></p>').appendTo("#ques_block");
+    });
+});
+</script>
 
 <p class="submit"><input class="button-primary" type="submit" name="subnotice" value="<?php _e('更新设置', 'weichuncai'); ?>"></p>
 </form>
